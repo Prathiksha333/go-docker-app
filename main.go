@@ -1,39 +1,42 @@
 package main
 
 import (
-	"log"
-	"net/http"
+    "fmt"
+    "log"
+    "net/http"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	// Render the home html page from static folder
-	http.ServeFile(w, r, "static/home.html")
-}
-
-func coursePage(w http.ResponseWriter, r *http.Request) {
-	// Render the course html page
-	http.ServeFile(w, r, "static/courses.html")
-}
-
-func aboutPage(w http.ResponseWriter, r *http.Request) {
-	// Render the about html page
-	http.ServeFile(w, r, "static/about.html")
-}
-
-func contactPage(w http.ResponseWriter, r *http.Request) {
-	// Render the contact html page
-	http.ServeFile(w, r, "static/contact.html")
+    html := `
+    <html>
+    <head>
+        <title>Go App</title>
+        <style>
+            body {
+                background-color: #f0f4f8;
+                font-family: Arial, sans-serif;
+                color: #333;
+                text-align: center;
+                padding-top: 100px;
+            }
+            .message {
+                font-size: 24px;
+                font-weight: bold;
+                color: #0066cc;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="message">Welcome to the Go App!</div>
+    </body>
+    </html>
+    `
+    fmt.Fprint(w, html)
 }
 
 func main() {
-
-	http.HandleFunc("/home", homePage)
-	http.HandleFunc("/courses", coursePage)
-	http.HandleFunc("/about", aboutPage)
-	http.HandleFunc("/contact", contactPage)
-
-	err := http.ListenAndServe("0.0.0.0:8080", nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+    http.HandleFunc("/", homePage)
+    fmt.Println("Server is running on http://localhost:8080")
+    log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
